@@ -1,6 +1,6 @@
-FROM flask IMPORT Flask, request, jsonify
-FROM flask_debugtoolbar IMPORT DebugToolbarExtension
-FROM models IMPORT db, connect_db, Cupcake
+from flask import Flask, request, jsonify
+from flask_debugtoolbar import DebugToolbarExtension
+from models import db, connect_db, Cupcake
 
 app= Flask(__name__)
 app.config['SECRET_KEY'] = 'oh-so-secret'
@@ -10,6 +10,8 @@ app.config['SQLALCHEMY_ECHO'] = True
 
 debug = DebugToolbarExtension(app)
 connect_db(app)
+
+DEFAULT_IMAGE_URL = "https://tinyurl.com/truffle-cupcake"
 
 @app.route('/cupcakes')
 def return_all_cupcakes():
@@ -51,10 +53,15 @@ def create_cupcake():
     }
     """
 
-    flavor = request.json("flavor")
-    size = request.json("size")
-    rating = request.json("rating")
-    image = request.json("image") or None
+
+    flavor = request.json["flavor"]
+    size = request.json["size"]
+    rating = request.json["rating"]
+
+    try:
+        image = request.json["image"]
+    except KeyError:
+        image = None
 
     new_cupcake = Cupcake(flavor=flavor,
                           size=size,
@@ -87,10 +94,14 @@ def update_cupcake(cupcake_id):
 
     cupcake = Cupcake.query.get(cupcake_id)
 
-    cupcake.flavor = request.json("flavor")
-    cupcake.size = request.json("size")
-    cupcake.rating = request.json("rating")
-    cupcake.image = request.json("image") or None
+    cupcake.flavor = request.json["flavor"]
+    cupcake.size = request.json["size"]
+    cupcake.rating = request.json["rating"]
+
+    try:
+        cupcake.image = request.json["image"]
+    except KeyError:
+        cupcake.image = DEFAULT_IMAGE_URL
 
     db.session.commit()
 
@@ -105,13 +116,13 @@ def update_cupcake(cupcake_id):
 @app.route('/cupcakes/<int:cupcake_id>', methods=["DELETE"])
 def delete_cupcake(cupcake_id):
     """ Deletes cupcake
-    
+
     {message: "Deleted"}
     """
 
     cupcake = Cupcake.query.get(cupcake_id)
-    
+
     db.session.delete(cupcake)
-    db.commit()
+    db.session.commit()
 
     return jsonify(message="Deleted")

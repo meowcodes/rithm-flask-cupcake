@@ -33,7 +33,7 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_create_cupcake(self):
-        """ POST to /cupcakes create a cupcake and return new cupcake """
+        """ POST to /cupcakes should create a cupcake and return new cupcake """
 
         response = self.client.post("/cupcakes",
                                     json={'flavor': 'testing',
@@ -50,3 +50,38 @@ class AppTestCase(unittest.TestCase):
         response_get_data = response_get.json['response']
 
         self.assertEqual(len(response_get_data), 2)
+
+    def test_update_cupcake(self):
+        """ PATCH to /cupcakes/10000 should update a cupcake and return updated cupcake """
+
+        response = self.client.patch("/cupcakes/10000",
+                                    json={'id':10000,
+                                          'flavor': 'birthday cake',
+                                          'size': 'enormous',
+                                          'rating': 100})
+        response_data = response.json['response']
+
+        self.assertEqual(response_data['flavor'], 'birthday cake')
+        self.assertEqual(response_data['size'], 'enormous')
+        self.assertEqual(response_data['rating'], 100)
+        self.assertEqual(response.status_code, 200)
+
+        cupcake = Cupcake.query.get(10000)
+
+        self.assertEqual(cupcake.flavor, 'birthday cake')
+        self.assertEqual(cupcake.size, 'enormous')
+        self.assertEqual(cupcake.rating, 100)
+
+    def test_delete_cupcake(self):
+        """ DELETE to /cupcakes/10000 should delete the cupcake and return message = "Deleted" """
+
+        response = self.client.delete("/cupcakes/10000")
+        response_message = response.json['message']
+
+        self.assertEqual(response_message, 'Deleted')
+        self.assertEqual(response.status_code, 200)
+
+        response_get = self.client.get("/cupcakes")
+        response_get_data = response_get.json['response']
+
+        self.assertEqual(len(response_get_data), 0)

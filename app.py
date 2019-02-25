@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, Cupcake
 
@@ -12,6 +12,14 @@ debug = DebugToolbarExtension(app)
 connect_db(app)
 
 DEFAULT_IMAGE_URL = "https://tinyurl.com/truffle-cupcake"
+
+@app.route('/')
+def show_index():
+    """ Shows all cupcakes and a new cupcake form """
+
+    cupcakes = Cupcake.query.all()
+
+    return render_template('index.html', cupcakes=cupcakes)
 
 @app.route('/cupcakes')
 def return_all_cupcakes():

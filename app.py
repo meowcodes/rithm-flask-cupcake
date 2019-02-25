@@ -20,7 +20,7 @@ def return_all_cupcakes():
             "flavor": chocolate,
             "size": enormous,
             "rating": 5,
-            "image": https://i.pinimg.com/236x/a4/8d/fc/a48dfc9b66a9ab500590832b940b3b10--icing-for-cupcakes-giant-cupcake-cakes.jpg?b=t}
+            "image": https://i.pinimg.com/236x/a4/8d/fc/a48dfc9b66a9ab500590832b940b3b10--icing-for-cupcakes-giant-cupcake-cakes.jpg?b=t}, ...
         ]}
 
 
@@ -28,18 +28,30 @@ def return_all_cupcakes():
 
     cupcakes = Cupcake.query.all()
 
-    serilized_cupcakes = [{"id": cupcake.id,
-                           "flavor": cupcake.flavor,
-                           "size": cupcake.size,
-                           "rating": cupcake.rating,
-                           "image": cupcake.image}
+    serialized_cupcakes = [{"id": cupcake.id,
+                            "flavor": cupcake.flavor,
+                            "size": cupcake.size,
+                            "rating": cupcake.rating,
+                            "image": cupcake.image}
                            for cupcake in cupcakes]
 
-    return jsonify(response=serilized_cupcakes)
+    return jsonify(response=serialized_cupcakes)
 
 
 @app.route('/cupcakes', methods=["POST"])
 def create_cupcake():
+    """ creates and returns new cupcake
+
+    {response:
+        {"id": 1,
+        "flavor": chocolate,
+        "size": enormous,
+        "rating": 5,
+        "image": https://i.pinimg.com/236x/a4/8d/fc/a48dfc9b66a9ab500590832b940b3b10--icing-for-cupcakes-giant-cupcake-cakes.jpg?b=t}
+    }
+
+
+    """
 
     flavor = request.json("flavor")
     size = request.json("size")
@@ -53,10 +65,10 @@ def create_cupcake():
     db.session.add(new_cupcake)
     db.session.commit()
 
-    serilized_cupcake = {"id": new_cupcake.id,
-                         "flavor": new_cupcake.flavor,
-                         "size": new_cupcake.size,
-                         "rating": new_cupcake.rating,
-                         "image": new_cupcake.image}
+    serialized_cupcake = {"id": new_cupcake.id,
+                          "flavor": new_cupcake.flavor,
+                          "size": new_cupcake.size,
+                          "rating": new_cupcake.rating,
+                          "image": new_cupcake.image}
 
-    return jsonify(response=serilized_cupcake)
+    return jsonify(response=serialized_cupcake)

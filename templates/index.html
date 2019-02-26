@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% for cupcake in cupcakes %}   
+<div id="pic_list">
+    {% for cupcake in cupcakes %}
     <div>
         <img src="{{ cupcake.image }}">
         <p>Flavor: {{ cupcake.flavor }}</p>
@@ -9,6 +10,7 @@
         <p>Rating: {{ cupcake.rating }}</p>
     </div>
     {% endfor %}
+</div>
 
     <form id="new_cupcake_form">
         <label for="flavor">Flavor: </label>

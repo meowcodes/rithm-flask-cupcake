@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, Cupcake
+from models import db, connect_db, Cupcake, DEFAULT_IMAGE_URL
 
 app= Flask(__name__)
 app.config['SECRET_KEY'] = 'oh-so-secret'
@@ -10,8 +10,6 @@ app.config['SQLALCHEMY_ECHO'] = True
 
 debug = DebugToolbarExtension(app)
 connect_db(app)
-
-DEFAULT_IMAGE_URL = "https://tinyurl.com/truffle-cupcake"
 
 @app.route('/')
 def show_index():
@@ -64,12 +62,7 @@ def create_cupcake():
     flavor = request.json["flavor"]
     size = request.json["size"]
     rating = request.json["rating"]
-    image = request.json.get("image") or None
-
-    # try:
-    #     image = request.json["image"]
-    # except KeyError:
-    #     image = None
+    image = request.json["image"]
 
     new_cupcake = Cupcake(flavor=flavor,
                           size=size,

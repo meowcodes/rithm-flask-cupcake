@@ -46,6 +46,15 @@ def return_all_cupcakes():
     return jsonify(response=serialized_cupcakes)
 
 
+@app.route('/cupcakes/<int:cupcake_id>')
+def show_one_cupcake(cupcake_id):
+    """ shows one cupcake """
+
+    cupcake = Cupcake.query.get(cupcake_id)
+
+    return render_template("cupcake.html", cupcake=cupcake)
+
+
 @app.route('/cupcakes', methods=["POST"])
 def create_cupcake():
     """ creates and returns new cupcake

@@ -29,5 +29,28 @@ $(document).ready( function() {
 
 
     });
+
+    $("#update_cupcake_form").on("submit", async function(evt) {
+        evt.preventDefault();
+
+        let updatedCupcake = {
+            flavor: $("#flavor").val(),
+            size: $("#size").val(),
+            rating: $("#rating").val(),
+            image: $("#image").val() || null
+        };
+
+        let cupcakeId = $("#id").val()
+
+        await $.ajax({
+            method: "PATCH",
+            url: `${BASE_URL}/cupcakes/${cupcakeId}`,
+            contentType: "application/json",
+            data: JSON.stringify(updatedCupcake)
+        });
+
+        location.reload();
+
+    });
 });
 

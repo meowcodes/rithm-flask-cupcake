@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <div>
+        <img src="{{ cupcake.image }}">
+        <p>Flavor: {{ cupcake.flavor }}</p>
+        <p>Size: {{ cupcake.size }}</p>
+        <p>Rating: {{ cupcake.rating }}</p>
+    </div>
+</div>
+
+    <form id="update_cupcake_form">
+        <label for="flavor">Flavor: </label>
+        <input id="flavor" name="flavor" value="{{ cupcake.flavor }}" required>
+        <label for="size">Size: </label>
+        <input id="size" name="size" value="{{ cupcake.size }}" required>
+        <label for="rating">Rating: </label>
+        <input id="rating" name="rating" type="number" value="{{ cupcake.rating }}" required>
+        <label for="image">Image URL: </label>
+        <input id="image" name="image" type="url" value="{{ cupcake.image }}">
+        <input id="id" name="id" value="{{ cupcake.id }}" type="hidden">
+        <button type="submit">Update Cupcake</button>
+    </form>
+{% endblock %}
